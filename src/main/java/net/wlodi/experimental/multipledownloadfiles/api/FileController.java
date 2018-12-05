@@ -38,7 +38,7 @@ public class FileController extends HttpServlet {
         
         response.setContentType("application/pdf");
         response.setHeader("Content-disposition", "attachment; filename=" + filename);
-        response.addCookie(new Cookie(COOKIE_NAME, "done"));
+        response.addCookie(new Cookie(COOKIE_NAME, "done-" + filename));
         
         try(InputStream in = FileController.class.getResourceAsStream("/" + filename);
           OutputStream out = response.getOutputStream()) {

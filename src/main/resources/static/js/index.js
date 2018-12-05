@@ -1,8 +1,5 @@
-const COOKIE_NAME = "DOWNLOAD";
-
 function multipleDownload(clickedDomElement) {
-		
-	const rawFilesToDownload = clickedDomElement.getAttribute('data-files');
+    const rawFilesToDownload = clickedDomElement.getAttribute('data-files');
 	const filesToDownload = rawFilesToDownload.split(",").map(file => file.trim());
 	
 	if(filesToDownload.length === 0) {
@@ -14,7 +11,7 @@ function multipleDownload(clickedDomElement) {
 	}
 	
 	if(filesToDownload.length > 1) {
-	    eraseCookie(COOKIE_NAME);
+	    eraseCookie(COOKIE_DOWNLOAD_STATUS);
 	    appendLinks(filesToDownload, 0);
 	}
 }
@@ -26,8 +23,9 @@ function appendLinks(filesToDownload, index) {
     
     let file = filesToDownload[index];
     
-    createCookie(COOKIE_NAME, file);
-    listenCookieChange(COOKIE_NAME, function() {
+    createCookie(COOKIE_DOWNLOAD_STATUS, file);
+    
+    listenCookieChange(COOKIE_DOWNLOAD_STATUS, () => {
         appendLinks(filesToDownload, ++index);
     });
     appendLink(file);
@@ -35,11 +33,17 @@ function appendLinks(filesToDownload, index) {
 
 
 function appendLink(file) {
+    logCookieValueByName("Cookie before create link:", COOKIE_DOWNLOAD_STATUS);
     const linkId = "download-" + _genId(file);
-	document.getElementById("right").innerHTML += '<a href="/download?file='+ file +'" id="'+ linkId +'" download="'+ file +'">' + file + '</a><br />';
-	document.getElementById(linkId).click();
+	_appendLogContainer('Append link to DOM: <a href="/download?file='+ file +'" id="'+ linkId +'" download="'+ file +'">' + file + '</a>');
+	_clickElementId(linkId);
+	logCookieValueByName("Cookie after click link:", COOKIE_DOWNLOAD_STATUS, true);
 }
 
 function _genId(file) {
-	return btoa(file).replace(/\=/g, "");;
+	return btoa(file).replace(/\=/g, "");
+}
+
+function _clickElementId(domId) {
+    document.getElementById(domId).click();
 }

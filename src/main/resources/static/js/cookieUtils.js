@@ -41,6 +41,7 @@ function listenCookieChange(cookieName, callback) {
     var intervalListener = setInterval(function() {
         const currentCookieValue = readCookie(cookieName);
         if (currentCookieValue !== cookieRegistry[cookieName]) {
+            logCookieValue("Cookie after change:", currentCookieValue);
             console.info("Read cookie: " + cookieName + ", value: " + currentCookieValue + ", by intervalListener: " + intervalListener);
             // update registry so we dont get triggered again
             eraseCookie(cookieName);
